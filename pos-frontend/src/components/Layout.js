@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import "../styles/layout.css";
+import "./layout.css";
 
 const Layout = ({ children }) => {
 
