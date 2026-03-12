@@ -1,18 +1,11 @@
-console.log("ENV CHECK:");
-console.log("DB_HOST:", process.env.DB_HOST);
-console.log("DB_USER:", process.env.DB_USER);
-console.log("DB_PASSWORD:", process.env.DB_PASSWORD);
-console.log("DB_NAME:", process.env.DB_NAME);
-console.log("DB_PORT:", process.env.DB_PORT);
-
 const { Pool } = require("pg");
 
 const pool = new Pool({
-  host: process.env.DB_HOST,
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  port: process.env.DB_PORT,
+  host: process.env.DB_HOST || "202.10.45.55",
+  user: process.env.DB_USER || "postgres",
+  password: process.env.DB_PASSWORD || "NewPassword123!",
+  database: process.env.DB_NAME || "postgres",
+  port: process.env.DB_PORT || 5432,
   ssl: {
     rejectUnauthorized: false
   }
