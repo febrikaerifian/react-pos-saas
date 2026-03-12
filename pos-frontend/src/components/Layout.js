@@ -1,21 +1,41 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
+import "./layout.css";
 
 const Layout = ({ children }) => {
 
   const navigate = useNavigate();
   const location = useLocation();
+
   const user = JSON.parse(localStorage.getItem("user"));
 
   const [time, setTime] = useState(new Date());
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  /* CLOCK */
   useEffect(() => {
+
     const timer = setInterval(() => {
       setTime(new Date());
     }, 1000);
 
     return () => clearInterval(timer);
+
+  }, []);
+
+  /* AUTO CLOSE SIDEBAR ON DESKTOP */
+  useEffect(() => {
+
+    const handleResize = () => {
+      if (window.innerWidth > 992) {
+        setSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+
   }, []);
 
   const handleLogout = () => {
@@ -44,10 +64,12 @@ const Layout = ({ children }) => {
   };
 
   return (
+
     <div className="layout-container">
 
       {/* SIDEBAR */}
-      <div className={`sidebar-glass ${sidebarOpen ? "open" : ""}`}>
+
+      <aside className={`sidebar-glass ${sidebarOpen ? "open" : ""}`}>
 
         <h4 className="logo">
           MODERN POS
@@ -84,7 +106,7 @@ const Layout = ({ children }) => {
                 to="/products"
                 onClick={() => setSidebarOpen(false)}
               >
-                📦 Product
+                📦 Products
               </Link>
             </li>
           )}
@@ -136,9 +158,11 @@ const Layout = ({ children }) => {
           )}
 
         </ul>
-      </div>
+
+      </aside>
 
       {/* OVERLAY MOBILE */}
+
       {sidebarOpen && (
         <div
           className="sidebar-overlay"
@@ -147,14 +171,15 @@ const Layout = ({ children }) => {
       )}
 
       {/* MAIN AREA */}
+
       <div className="main-area">
 
         {/* NAVBAR */}
-        <div className="navbar-top">
+
+        <header className="navbar-top">
 
           <div className="navbar-left">
 
-            {/* HAMBURGER */}
             <button
               className="menu-btn"
               onClick={() => setSidebarOpen(!sidebarOpen)}
@@ -165,10 +190,13 @@ const Layout = ({ children }) => {
             <div>
 
               <h5 className="welcome">
+
                 Welcome
+
                 <span className="role-badge">
                   {user?.role || "USER"}
                 </span>
+
               </h5>
 
               <small className="date">
@@ -179,7 +207,6 @@ const Layout = ({ children }) => {
 
           </div>
 
-          {/* RIGHT */}
           <div className="navbar-right">
 
             <div className="clock">
@@ -200,7 +227,6 @@ const Layout = ({ children }) => {
                 <li className="px-3 py-2">
 
                   <strong>{user?.name}</strong>
-
                   <br />
 
                   <small className="text-muted">
@@ -228,204 +254,18 @@ const Layout = ({ children }) => {
 
           </div>
 
-        </div>
+        </header>
 
         {/* CONTENT */}
-        <div className="content-area">
+
+        <main className="content-area">
           {children}
-        </div>
+        </main>
 
       </div>
 
-      {/* STYLE */}
-      <style>{`
-
-      .layout-container{
-        display:flex;
-      }
-
-      /* SIDEBAR */
-
-      .sidebar-glass{
-
-        position:fixed;
-        left:0;
-        top:0;
-        width:240px;
-        height:100vh;
-
-        background:rgba(0,0,0,0.75);
-        backdrop-filter:blur(10px);
-
-        padding:20px;
-        z-index:1000;
-
-        transition:transform .3s ease;
-
-      }
-
-      .logo{
-
-        color:white;
-        text-align:center;
-        margin-bottom:30px;
-        font-weight:700;
-
-      }
-
-      .sidebar-menu{
-        list-style:none;
-        padding:0;
-      }
-
-      .sidebar-menu li{
-        margin-bottom:10px;
-      }
-
-      .sidebar-menu .nav-link{
-
-        display:block;
-        padding:10px 14px;
-        color:#ddd;
-        text-decoration:none;
-        border-radius:10px;
-        transition:.2s;
-
-      }
-
-      .sidebar-menu .nav-link:hover{
-
-        background:rgba(255,255,255,0.1);
-        color:white;
-
-      }
-
-      .active-menu{
-
-        background:white;
-        color:black !important;
-        font-weight:600;
-
-      }
-
-      /* MAIN */
-
-      .main-area{
-
-        margin-left:240px;
-        width:100%;
-
-      }
-
-      /* NAVBAR */
-
-      .navbar-top{
-
-        display:flex;
-        justify-content:space-between;
-        align-items:center;
-
-        background:linear-gradient(90deg,#f8f9fa,#e9ecef,#ffffff);
-
-        padding:16px 24px;
-
-        border-bottom:1px solid #e5e5e5;
-
-      }
-
-      .navbar-left{
-        display:flex;
-        align-items:center;
-        gap:15px;
-      }
-
-      .menu-btn{
-
-        border:none;
-        background:white;
-        border-radius:6px;
-        padding:5px 10px;
-        font-size:18px;
-
-      }
-
-      .welcome{
-
-        margin:0;
-        font-weight:600;
-      }
-
-      .role-badge{
-
-        background:#6c757d;
-        color:white;
-        border-radius:6px;
-        padding:3px 8px;
-        margin-left:8px;
-        font-size:12px;
-
-      }
-
-      .clock{
-
-        background:white;
-        padding:6px 10px;
-        border-radius:8px;
-        border:1px solid #ddd;
-        font-weight:600;
-
-      }
-
-      .navbar-right{
-        display:flex;
-        align-items:center;
-        gap:20px;
-      }
-
-      /* CONTENT */
-
-      .content-area{
-
-        padding:24px;
-        background:#f4f6fb;
-        min-height:calc(100vh - 70px);
-
-      }
-
-      /* MOBILE */
-
-      @media(max-width:768px){
-
-        .sidebar-glass{
-          transform:translateX(-100%);
-        }
-
-        .sidebar-glass.open{
-          transform:translateX(0);
-        }
-
-        .main-area{
-          margin-left:0;
-        }
-
-      }
-
-      .sidebar-overlay{
-
-        position:fixed;
-        top:0;
-        left:0;
-        width:100%;
-        height:100%;
-
-        background:rgba(0,0,0,0.4);
-        z-index:900;
-
-      }
-
-      `}</style>
-
     </div>
+
   );
 };
 
