@@ -39,7 +39,7 @@ router.post('/login', async (req, res) => {
         branch_id: user.branch_id,
         role: user.role
       },
-      process.env.JWT_SECRET,
+      process.env.JWT_SECRET || "supersecretkey",
       { expiresIn: '7d' }
     );
 
