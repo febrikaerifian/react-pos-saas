@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import "./layout.css";
+import "../styles/layout.css";
 
 const Layout = ({ children }) => {
 
