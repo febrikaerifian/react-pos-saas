@@ -15,7 +15,7 @@ const PORT = process.env.PORT || 5000;
 
 // ✅ CORS untuk frontend Vercel
 app.use(cors({
-  origin: 'http://localhost:3000', // frontend Vercel
+  origin: 'https://react-pos-saas.vercel.app', // frontend Vercel
   credentials: true,
 }));
 
