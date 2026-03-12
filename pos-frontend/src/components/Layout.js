@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import "./layout.css";
+import "../styles/layout.css";
 
 const Layout = ({ children }) => {
 
@@ -10,7 +10,7 @@ const Layout = ({ children }) => {
   const user = JSON.parse(localStorage.getItem("user"));
 
   const [time, setTime] = useState(new Date());
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(true);
 
   /* CLOCK */
   useEffect(() => {
@@ -20,21 +20,6 @@ const Layout = ({ children }) => {
     }, 1000);
 
     return () => clearInterval(timer);
-
-  }, []);
-
-  /* AUTO CLOSE SIDEBAR ON DESKTOP */
-  useEffect(() => {
-
-    const handleResize = () => {
-      if (window.innerWidth > 992) {
-        setSidebarOpen(false);
-      }
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
 
   }, []);
 
@@ -59,17 +44,17 @@ const Layout = ({ children }) => {
       weekday: "long",
       day: "numeric",
       month: "long",
-      year: "numeric",
+      year: "numeric"
     });
   };
 
   return (
 
-    <div className="layout-container">
+    <div className={`layout-container ${sidebarOpen ? "" : "collapsed"}`}>
 
       {/* SIDEBAR */}
 
-      <aside className={`sidebar-glass ${sidebarOpen ? "open" : ""}`}>
+      <aside className="sidebar-glass">
 
         <h4 className="logo">
           MODERN POS
@@ -78,47 +63,35 @@ const Layout = ({ children }) => {
         <ul className="sidebar-menu">
 
           <li>
-            <Link
-              className={isActive("/dashboard")}
-              to="/dashboard"
-              onClick={() => setSidebarOpen(false)}
-            >
-              📊 Dashboard
+            <Link className={isActive("/dashboard")} to="/dashboard">
+              <span className="icon">📊</span>
+              <span className="menu-text">Dashboard</span>
             </Link>
           </li>
 
           {user?.role === "cashier" && (
             <li>
-              <Link
-                className={isActive("/cashier")}
-                to="/cashier"
-                onClick={() => setSidebarOpen(false)}
-              >
-                🛒 Cashier
+              <Link className={isActive("/cashier")} to="/cashier">
+                <span className="icon">🛒</span>
+                <span className="menu-text">Cashier</span>
               </Link>
             </li>
           )}
 
           {user?.role === "admin" && (
             <li>
-              <Link
-                className={isActive("/products")}
-                to="/products"
-                onClick={() => setSidebarOpen(false)}
-              >
-                📦 Products
+              <Link className={isActive("/products")} to="/products">
+                <span className="icon">📦</span>
+                <span className="menu-text">Products</span>
               </Link>
             </li>
           )}
 
           {(user?.role === "owner" || user?.role === "cashier") && (
             <li>
-              <Link
-                className={isActive("/stock")}
-                to="/stock"
-                onClick={() => setSidebarOpen(false)}
-              >
-                📊 Stock Monitoring
+              <Link className={isActive("/stock")} to="/stock">
+                <span className="icon">📊</span>
+                <span className="menu-text">Stock Monitoring</span>
               </Link>
             </li>
           )}
@@ -126,32 +99,23 @@ const Layout = ({ children }) => {
           {user?.role === "owner" && (
             <>
               <li>
-                <Link
-                  className={isActive("/transactions")}
-                  to="/transactions"
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  🧾 Transactions
+                <Link className={isActive("/transactions")} to="/transactions">
+                  <span className="icon">🧾</span>
+                  <span className="menu-text">Transactions</span>
                 </Link>
               </li>
 
               <li>
-                <Link
-                  className={isActive("/branches")}
-                  to="/branches"
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  🏢 Branches
+                <Link className={isActive("/branches")} to="/branches">
+                  <span className="icon">🏢</span>
+                  <span className="menu-text">Branches</span>
                 </Link>
               </li>
 
               <li>
-                <Link
-                  className={isActive("/users")}
-                  to="/users"
-                  onClick={() => setSidebarOpen(false)}
-                >
-                  👤 Users
+                <Link className={isActive("/users")} to="/users">
+                  <span className="icon">👤</span>
+                  <span className="menu-text">Users</span>
                 </Link>
               </li>
             </>
@@ -160,15 +124,6 @@ const Layout = ({ children }) => {
         </ul>
 
       </aside>
-
-      {/* OVERLAY MOBILE */}
-
-      {sidebarOpen && (
-        <div
-          className="sidebar-overlay"
-          onClick={() => setSidebarOpen(false)}
-        />
-      )}
 
       {/* MAIN AREA */}
 
@@ -267,6 +222,7 @@ const Layout = ({ children }) => {
     </div>
 
   );
+
 };
 
 export default Layout;
