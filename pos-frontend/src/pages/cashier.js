@@ -146,80 +146,56 @@ return(
 
 {`
 
+/* HEADER */
+
 .header-gradient{
 background:linear-gradient(90deg,#36d1dc,#5b86e5);
 padding:16px 20px;
 border-radius:12px;
 color:white;
 margin-bottom:20px;
-box-shadow:0 6px 20px rgba(0,0,0,0.15);
 }
 
-.checkout-btn{
-background:linear-gradient(90deg,#ff7e5f,#feb47b);
-border:none;
-font-weight:600;
-font-size:16px;
-padding:12px;
-border-radius:10px;
-color:white;
-transition:all .2s ease;
-box-shadow:0 4px 12px rgba(255,126,95,0.4);
-}
-
-.checkout-btn:hover{
-transform:translateY(-2px);
-box-shadow:0 8px 20px rgba(255,126,95,0.5);
-opacity:0.95;
-}
+/* PRODUCT CARD */
 
 .product-card{
 background:#fff;
 border-radius:14px;
-padding:16px;
+padding:14px;
 cursor:pointer;
 height:100%;
 display:flex;
 flex-direction:column;
 justify-content:space-between;
 box-shadow:0 3px 10px rgba(0,0,0,0.08);
-transition:all .25s ease;
-}
-
-.product-card:hover{
-transform:translateY(-6px);
-box-shadow:0 12px 30px rgba(0,0,0,0.12);
 }
 
 .product-icon{
-font-size:32px;
-margin-bottom:10px;
+font-size:26px;
 }
 
 .product-name{
 font-weight:600;
-font-size:14px;
-min-height:36px;
+font-size:13px;
 }
 
 .product-price{
-margin-top:8px;
+margin-top:6px;
 background:#e9f7ef;
 color:#198754;
-padding:6px 10px;
+padding:5px 8px;
 border-radius:8px;
 font-weight:700;
-font-size:14px;
-display:inline-block;
+font-size:13px;
 }
 
 .product-stock{
 font-size:11px;
-padding:4px 8px;
+padding:3px 7px;
 border-radius:20px;
 background:#e7f3ff;
 color:#0d6efd;
-margin-bottom:6px;
+margin-bottom:4px;
 display:inline-block;
 }
 
@@ -229,19 +205,90 @@ color:#dc3545;
 }
 
 .product-btn{
-margin-top:12px;
+margin-top:8px;
 border:none;
 background:linear-gradient(90deg,#36d1dc,#5b86e5);
 color:white;
 padding:6px;
 border-radius:8px;
-font-size:13px;
+font-size:12px;
+}
+
+/* CHECKOUT */
+
+.checkout-btn{
+background:linear-gradient(90deg,#ff7e5f,#feb47b);
+border:none;
 font-weight:600;
+padding:12px;
+border-radius:10px;
+color:white;
+}
+
+/* RECEIPT */
+
+.receipt{
+font-family:monospace;
+font-size:12px;
+width:100%;
+}
+
+.receipt-header{
+text-align:center;
+}
+
+.receipt-logo{
+width:60px;
+margin-bottom:4px;
+}
+
+.receipt-divider{
+border-top:1px dashed #000;
+margin:6px 0;
+}
+
+.receipt-row{
+display:flex;
+justify-content:space-between;
+}
+
+.receipt-total{
+font-weight:bold;
+}
+
+.receipt-footer{
+text-align:center;
+margin-top:10px;
+}
+
+/* PRINT */
+
+@media print{
+
+body{
+margin:0;
+}
+
+.receipt{
+width:58mm;
+}
+
+}
+
+/* MOBILE GRID */
+
+@media(max-width:600px){
+
+.product-card{
+padding:10px;
+}
+
 }
 
 `}
 
 </style>
+
 
 {/* HEADER */}
 
@@ -249,9 +296,7 @@ font-weight:600;
 
 <div className="d-flex justify-content-between align-items-center flex-wrap">
 
-<h4 className="fw-bold m-0">
-🧾 POS Cashier
-</h4>
+<h4 className="fw-bold m-0">🧾 POS Cashier</h4>
 
 <div>
 Branch :
@@ -269,10 +314,7 @@ Branch :
 
 {showToast.visible&&(
 
-<div
-className={`toast align-items-center text-bg-${showToast.type} position-fixed top-0 end-0 m-3 show`}
-style={{zIndex:9999}}
->
+<div className={`toast text-bg-${showToast.type} position-fixed top-0 end-0 m-3 show`}>
 
 <div className="d-flex">
 
@@ -291,6 +333,7 @@ onClick={()=>setShowToast({visible:false,type:'success'})}
 
 )}
 
+
 <div className="row">
 
 {/* CART */}
@@ -305,45 +348,19 @@ onClick={()=>setShowToast({visible:false,type:'success'})}
 Cart 🛒
 </h5>
 
-{cart.length===0&&(
-<p className="text-muted">
-Cart kosong
-</p>
+{cart.length===0 && (
+<p className="text-muted">Cart kosong</p>
 )}
-
-{cart.length>0&&(
-
-<div className="table-responsive" style={{maxHeight:250}}>
-
-<table className="table table-sm">
-
-<tbody>
 
 {cart.map(item=>(
 
-<tr key={item.id}>
+<div key={item.id} className="d-flex justify-content-between mb-2">
 
-<td>{item.name}</td>
+<span>{item.name} x{item.qty}</span>
 
-<td style={{width:60}}>
-
-<input
-type="number"
-min="1"
-value={item.qty}
-onChange={(e)=>updateQty(item.id,e.target.value)}
-className="form-control form-control-sm"
-/>
-
-</td>
-
-<td>
-
+<span>
 Rp {(item.price*item.qty).toLocaleString()}
-
-</td>
-
-<td>
+</span>
 
 <button
 className="btn btn-sm btn-danger"
@@ -352,19 +369,9 @@ onClick={()=>removeItem(item.id)}
 x
 </button>
 
-</td>
-
-</tr>
-
-))}
-
-</tbody>
-
-</table>
-
 </div>
 
-)}
+))}
 
 <hr/>
 
@@ -388,9 +395,7 @@ onChange={(e)=>setPayment(parseInt(e.target.value)||0)}
 Kembalian :
 
 <span className="text-success ms-2">
-
 Rp {change>0?change.toLocaleString():0}
-
 </span>
 
 </h6>
@@ -425,7 +430,7 @@ onChange={(e)=>setSearch(e.target.value)}
 
 {filteredProducts.map(product=>(
 
-<div key={product.id} className="col-6 col-md-4 col-lg-3">
+<div key={product.id} className="col-4 col-md-4 col-lg-3">
 
 <div
 className="product-card"
@@ -434,17 +439,11 @@ onClick={()=>addToCart(product)}
 
 <div>
 
-<div className="product-icon">
-📦
-</div>
-
-{product.stock!==undefined&&(
+<div className="product-icon">📦</div>
 
 <div className={`product-stock ${product.stock<=5?'low':''}`}>
 Stock {product.stock}
 </div>
-
-)}
 
 <div className="product-name">
 {product.name}
@@ -471,6 +470,97 @@ Tambah
 </div>
 
 </div>
+
+
+{/* RECEIPT PREVIEW */}
+
+{showPreview && lastTransaction && (
+
+<div className="modal fade show d-block" style={{background:"rgba(0,0,0,0.5)"}}>
+
+<div className="modal-dialog">
+
+<div className="modal-content">
+
+<div className="modal-header">
+<h5 className="modal-title">Preview Struk</h5>
+</div>
+
+<div className="modal-body">
+
+<div ref={receiptRef} className="receipt">
+
+<div className="receipt-header">
+
+<img src="/logo.png" alt="logo" className="receipt-logo"/>
+
+<div><b>{user?.branch_name || "TOKO"}</b></div>
+
+<div>{lastTransaction.date}</div>
+
+</div>
+
+<div className="receipt-divider"></div>
+
+{lastTransaction.items.map(i=>(
+
+<div key={i.id} className="receipt-row">
+
+<span>{i.name} x{i.qty}</span>
+
+<span>
+Rp {(i.price*i.qty).toLocaleString()}
+</span>
+
+</div>
+
+))}
+
+<div className="receipt-divider"></div>
+
+<div className="receipt-row receipt-total">
+<span>Total</span>
+<span>Rp {lastTransaction.total.toLocaleString()}</span>
+</div>
+
+<div className="receipt-row">
+<span>Bayar</span>
+<span>Rp {lastTransaction.payment.toLocaleString()}</span>
+</div>
+
+<div className="receipt-row">
+<span>Kembali</span>
+<span>Rp {lastTransaction.change.toLocaleString()}</span>
+</div>
+
+<div className="receipt-divider"></div>
+
+<div className="receipt-footer">
+Terima kasih
+</div>
+
+</div>
+
+</div>
+
+<div className="modal-footer">
+
+<button
+className="btn btn-primary w-100"
+onClick={handlePrint}
+>
+🖨 Print Struk
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+)}
 
 </div>
 
