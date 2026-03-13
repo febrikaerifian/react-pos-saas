@@ -71,11 +71,26 @@ setCart(cart.filter(item=>item.id!==id));
 const total=cart.reduce((sum,item)=>sum+item.price*item.qty,0);
 const change=payment-total;
 
+/* PRINT */
+
 const handlePrint=useReactToPrint({
 content:()=>receiptRef.current,
 documentTitle:"Receipt",
-onAfterPrint:()=>setShowPreview(false)
+onAfterPrint:()=>{
+setShowPreview(false);
+setLastTransaction(null);
+}
 });
+
+/* NO PRINT */
+
+const handleNoPrint=()=>{
+setShowPreview(false);
+setLastTransaction(null);
+showToastMessage('Transaksi selesai','success');
+};
+
+/* CHECKOUT */
 
 const handleCheckout=async()=>{
 
@@ -142,11 +157,7 @@ return(
 
 <div className="container-fluid position-relative">
 
-<style>
-
-{`
-
-/* HEADER */
+<style>{`
 
 .header-gradient{
 background:linear-gradient(90deg,#36d1dc,#5b86e5);
@@ -155,8 +166,6 @@ border-radius:12px;
 color:white;
 margin-bottom:20px;
 }
-
-/* PRODUCT CARD */
 
 .product-card{
 background:#fff;
@@ -214,8 +223,6 @@ border-radius:8px;
 font-size:12px;
 }
 
-/* CHECKOUT */
-
 .checkout-btn{
 background:linear-gradient(90deg,#ff7e5f,#feb47b);
 border:none;
@@ -224,8 +231,6 @@ padding:12px;
 border-radius:10px;
 color:white;
 }
-
-/* RECEIPT */
 
 .receipt{
 font-family:monospace;
@@ -261,33 +266,12 @@ text-align:center;
 margin-top:10px;
 }
 
-/* PRINT */
-
 @media print{
-
-body{
-margin:0;
+body{margin:0;}
+.receipt{width:58mm;}
 }
 
-.receipt{
-width:58mm;
-}
-
-}
-
-/* MOBILE GRID */
-
-@media(max-width:600px){
-
-.product-card{
-padding:10px;
-}
-
-}
-
-`}
-
-</style>
+`}</style>
 
 
 {/* HEADER */}
@@ -476,9 +460,16 @@ Tambah
 
 {showPreview && lastTransaction && (
 
-<div className="modal fade show d-block" style={{background:"rgba(0,0,0,0.5)"}}>
+<div
+className="modal fade show d-block"
+style={{background:"rgba(0,0,0,0.5)"}}
+onClick={handleNoPrint}
+>
 
-<div className="modal-dialog">
+<div
+className="modal-dialog"
+onClick={(e)=>e.stopPropagation()}
+>
 
 <div className="modal-content">
 
@@ -543,13 +534,20 @@ Terima kasih
 
 </div>
 
-<div className="modal-footer">
+<div className="modal-footer d-flex gap-2">
 
 <button
-className="btn btn-primary w-100"
+className="btn btn-secondary w-50"
+onClick={handleNoPrint}
+>
+✔ Selesai
+</button>
+
+<button
+className="btn btn-primary w-50"
 onClick={handlePrint}
 >
-🖨 Print Struk
+🖨 Print
 </button>
 
 </div>
