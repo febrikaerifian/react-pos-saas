@@ -490,7 +490,7 @@ onClick={(e)=>e.stopPropagation()}
 
 <div className="receipt-header">
 
-<img src="/logo.png" alt="logo" className="receipt-logo"/>
+/* <img src="/logo.png" alt="logo" className="receipt-logo"/> */
 
 <div><b>{user?.branch_name || "TOKO"}</b></div>
 
