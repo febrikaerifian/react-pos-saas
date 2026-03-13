@@ -100,6 +100,10 @@
    NAVBAR
 ========================= */
 
+/* =========================
+   NAVBAR
+========================= */
+
 .navbar-top{
 
   display:flex;
@@ -112,6 +116,9 @@
 
   border-bottom:1px solid #e5e5e5;
 
+  flex-wrap:wrap;
+  gap:10px;
+
 }
 
 .navbar-left{
@@ -120,14 +127,17 @@
   align-items:center;
   gap:15px;
 
+  min-width:0;
 }
 
 .navbar-right{
 
   display:flex;
   align-items:center;
-  gap:20px;
+  gap:12px;
 
+  min-width:0;
+  flex-shrink:1;
 }
 
 /* HAMBURGER */
