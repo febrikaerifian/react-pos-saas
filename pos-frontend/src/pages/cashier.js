@@ -368,8 +368,15 @@ x
 <input
 type="number"
 className="form-control"
-value={payment}
-onChange={(e)=>setPayment(parseInt(e.target.value)||0)}
+value={payment === 0 ? '' : payment}
+onFocus={() => payment === 0 && setPayment('')}
+onBlur={(e) => {
+  if (e.target.value === '') setPayment(0);
+}}
+onChange={(e)=>{
+  const val = e.target.value;
+  setPayment(val === '' ? '' : parseInt(val));
+}}
 />
 
 </div>
